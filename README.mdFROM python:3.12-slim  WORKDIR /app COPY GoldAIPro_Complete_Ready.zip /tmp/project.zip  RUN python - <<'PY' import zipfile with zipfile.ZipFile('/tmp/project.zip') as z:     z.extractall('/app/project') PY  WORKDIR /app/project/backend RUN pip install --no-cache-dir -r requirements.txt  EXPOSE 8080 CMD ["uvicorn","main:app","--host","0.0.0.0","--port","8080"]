@@ -1,0 +1,16 @@
+FROM python:3.12-slim
+
+WORKDIR /app
+COPY GoldAIPro_Complete_Ready.zip /tmp/project.zip
+
+RUN python - <<'PY'
+import zipfile
+with zipfile.ZipFile('/tmp/project.zip') as z:
+    z.extractall('/app/project')
+PY
+
+WORKDIR /app/project/backend
+RUN pip install --no-cache-dir -r requirements.txt
+
+EXPOSE 8080
+CMD ["uvicorn","main:app","--host","0.0.0.0","--port","8080"]
